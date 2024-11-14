@@ -1,9 +1,11 @@
- # BlindISP  
- This project is a collection of my self made utils, experiments and solutions on bypassing complex models with DPI (Deep packet inspection) combined with VPN protocols blocking and aggressive censorship. 
+ # Suffer 
+ This project is a collection of my self made utils, experiments and solutions on bypassing complex models with DPI (Deep packet inspection) combined with VPN protocols blocking and aggressive censorship. It's mainly centered around Suffer VPN protocol server, which is meant to be easily deployable (Written in Node.js!) and easily configurable (All-default values with already good strength level), while maintaining main principles in case if it all will work fine.
  
- DPI (Deep packet inspection) is an infrastructure of packet analysers that determine source of that packet, applied protocol used in that packet. DPI is denoted as one of most dangerous utilities used for censorship. 
- 
- However, the censorship isn't always "good". Some countries use it as a tool of concurrent destruction and manipulation over companies.  This DPI usage is unhonorable, inhumane, and is a betrayal of freedom. 
+ DPI (Deep packet inspection) is an infrastructure of packet analysers that determine source of that packet, applied protocol used in that packet. DPI is denoted as one of most dangerous utilities used for censorship. The main problem in Russia, lies in providers using completely differently tuned deep packet inspection, different versions of it (in some regions the release of TTTD is older, in Moscow it's the latest)
+
+TTTD (Techincal tool of threats defence) is Roskomnadzor's retarded skid of Chinese great firewall infrastructure. Rkn workers are so talentless, hopeless and helpless, that they are testing full lockdown from foreign traffic, same as it's done in DPRK or China's GFW. Even while having a work of Chinese government which used way more advanced methods, they still managed to get out with lots of security holes.
+
+This project makes TTTD **Suffer** in worst pain ever possible. It's what this chunk of python3/go abomination deserves for blocking youtube, discord, facebook, instagram, twitter, cloudflare CDNs, VPN protocols, and many more goods that adequate people use in their ordinary lives.
  
  DPI's are commonly classified by these groups:
  - Passive DPI. This type of DPI usually doesn't modify the packets and listens only to out traffic sent from client. Basically, it *can* be compared to MITM (Man-in-the-middle) attack. It can be combated in several ways: enabling DoH DNS server (e.g 1.1.1.1) with DNSSEC, enabling QUIC or HTTP/3, enabling TLS 1.3 and encrypted ClientHello, using local proxy server PAC file with a script made specifically for your provider, and not only that. However, I should mention that it's a best practice if you avoid triggering passive DPI. It's a hard, but beatable task to combat it after it was triggered.
