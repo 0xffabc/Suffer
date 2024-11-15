@@ -11,6 +11,7 @@ Content-Length: 1
 a`;
 
 net.createServer(socket => {
+  udp.on("message", (msg, info) => socket.write([0, info.port, ...Buffer.from(info.address), ...msg]));
   socket.on("data", data => {
     const buf = Array.from(data);
     switch (buf.shift()) {
@@ -18,12 +19,12 @@ net.createServer(socket => {
         const port = buf.shift();
         const addr = buf.splice(0, 4);
         
-        udp.send(buf.slice(0, buf.length), 0, buf.length, port, `${addr[0]}.${addr[1]}.${addr[2]}.${addr[3]}`);
+        udp.send(buf, 0, buf.length, port, `${addr[0]}.${addr[1]}.${addr[2]}.${addr[3]}`);
         break;
       case 1:
         dns.lookup(String.fromCharCode(buf.slice(2, buf.length)), { family: buf[1] }, (err, solval) => {
           const addr = solval[0].address;
-          socket.write([buf[0], Buffer.from(addr)]);
+          socket.write([1, buf[0], Buffer.from(addr)]);
         });
         break;
       case 2:
@@ -32,13 +33,13 @@ net.createServer(socket => {
         
         if (isOpening) {
           sockets[sockId] = new net.Socket();
-          sockets[sockId].on("data", data => socket.write([sockId, ...data]));
+          sockets[sockId].on("data", data => socket.write([2, sockId, ...data]));
           sockets[sockId].on("close", err => {
-            socket.write([0x2, sockets[sockId]]);
+            socket.write([2, sockId, 2]);
           });
-          sockets[sockId].on("error", err => socket.write([0x2, sockets[sockId]]));
+          sockets[sockId].on("error", err => socket.write([2, sockets[sockId]]));
         } else if (sockets[sockId]) {
-          sockets[sockId].write([sockId, buf]);
+          sockets[sockId].write(buf);
         }
         break;
       default:
