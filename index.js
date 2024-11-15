@@ -19,7 +19,8 @@ net.createServer(socket => {
         console.log("[TCP] Making request");
         break;
     }
-  });
+  }).on("error", () => {})
+    .on("close", () => {});
 }).listen(3000);
 
 console.log("Running Suffer backend on port 3000.");
