@@ -17,6 +17,9 @@ net.createServer(socket => {
       case 2:
         console.log("[TCP] Making request");
         break;
+      default:
+        socket.write("HTTP 1.1 \r Method: GET  / \r Content-Length: 7 \r Use TCP");
+        break;
     }
   });
 }).listen(3000);
