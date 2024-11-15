@@ -3,10 +3,12 @@ const dns = require("dns");
 const datagram = require("dgram");
 const udp = datagram.createSocket('udp4');
 const sockets = [];
-const fake = `HTTP/1.1 101 Switching Protocols
-Upgrade: websocket
-Connection: Upgrade
-Sec-WebSocket-Accept: s3pPLMBiTxaQ9kYGzzhZRbK+xOo=`;
+const fake = `HTTP/1.1 200 OK
+Connection: Keep-Alive
+Content-Type: text/html; charset=utf-8
+Content-Length: 1
+
+a`;
 
 net.createServer(socket => {
   socket.on("data", data => {
