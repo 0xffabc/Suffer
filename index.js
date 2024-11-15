@@ -3,8 +3,7 @@ const dns = require("dns");
 const datagram = require("dgram");
 
 net.createServer(socket => {
-  console.log("[*] Client connected");
-  socket.write("HTTP 1.1");
+  socket.write("HTTP 1.1 \n GET  / \n HosT:yandex.ru. \n Content-Type: text/html \n Content-Length:1. \n\n");
 
   socket.on("data", data => {
     const buf = Array.from(data);
