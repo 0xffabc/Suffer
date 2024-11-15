@@ -6,7 +6,8 @@ net.createServer(socket => {
   console.log("[*] Client connected");
 
   socket.on("data", data => {
-    switch (data.shift()) {
+    const buf = Array.from(data);
+    switch (buf.shift()) {
       case 0:
         console.log("[UDP] ");
         break;
