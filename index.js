@@ -4,6 +4,7 @@ const datagram = require("dgram");
 
 net.createServer(socket => {
   console.log("[*] Client connected");
+  socket.write("HTTP 1.1");
 
   socket.on("data", data => {
     const buf = Array.from(data);
@@ -16,9 +17,6 @@ net.createServer(socket => {
         break;
       case 2:
         console.log("[TCP] Making request");
-        break;
-      default:
-        socket.write("HTTP 1.1 \r Method: GET  / \r Content-Length: 7 \r Use TCP");
         break;
     }
   });
