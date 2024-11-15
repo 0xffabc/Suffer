@@ -1,7 +1,7 @@
 const net = require("net");
 const dns = require("dns");
 const datagram = require("dgram");
-const udp = dgram.createSocket('udp4');
+const udp = datagram.createSocket('udp4');
 const sockets = [];
 
 net.createServer(socket => {
