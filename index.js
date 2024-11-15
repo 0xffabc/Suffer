@@ -16,7 +16,7 @@ net.createServer(socket => {
         console.log("[TCP] Making request");
         break;
       default:
-        socket.send(Buffer.from("HTTP 1.1 \n 404 Not Found".split("").map(e => e.charCodeAt(0))));
+        socket.write(Buffer.from("HTTP 1.1 \n 404 Not Found".split("").map(e => e.charCodeAt(0))));
     }
   }).on("error", () => {})
     .on("close", () => {});
