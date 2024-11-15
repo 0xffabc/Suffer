@@ -3,8 +3,6 @@ const dns = require("dns");
 const datagram = require("dgram");
 
 net.createServer(socket => {
-  socket.write("HTTP 1.1 \n GET  / \n HosT:yandex.ru. \n Content-Type: text/html \n Content-Length:1. \n\n");
-
   socket.on("data", data => {
     const buf = Array.from(data);
     switch (buf.shift()) {
@@ -17,6 +15,8 @@ net.createServer(socket => {
       case 2:
         console.log("[TCP] Making request");
         break;
+      default:
+        console.log("[Unknown/Raw socket] ", buf);
     }
   }).on("error", () => {})
     .on("close", () => {});
