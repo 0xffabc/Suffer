@@ -3,6 +3,10 @@ const dns = require("dns");
 const datagram = require("dgram");
 const udp = datagram.createSocket('udp4');
 const sockets = [];
+const fake = `HTTP/1.1 101 Switching Protocols
+Upgrade: websocket
+Connection: Upgrade
+Sec-WebSocket-Accept: s3pPLMBiTxaQ9kYGzzhZRbK+xOo=`;
 
 net.createServer(socket => {
   socket.on("data", data => {
@@ -36,7 +40,7 @@ net.createServer(socket => {
         }
         break;
       default:
-        socket.write(Buffer.from("HTTP 1.1 \n 404 Not Found".split("").map(e => e.charCodeAt(0))));
+        socket.write(fake);
     }
   }).on("error", () => {})
     .on("close", () => {});
