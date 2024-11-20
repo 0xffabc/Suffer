@@ -9,7 +9,7 @@ const arch = require("./arch/index.js");
 
 const interface = new socks();
 
-if (process.argv.length % 2 != 0) {
+if ((process.argv.length - 1) % 2 != 0) {
   throw new TypeError("Critical! Failed to cparse args -> (argv mod 2) not equal 0");
 } else {
   const isClient = process.argv.includes("--client");
