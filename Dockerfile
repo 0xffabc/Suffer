@@ -3,6 +3,6 @@ WORKDIR /home
 
 COPY . ./
 EXPOSE 7912
-RUN npm install
+RUN apk update && apk add nodejs npm && npm install
 
 CMD ["node index.js --server --tcp --port 7912 --host 0.0.0.0 --private test"]
