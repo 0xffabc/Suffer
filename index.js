@@ -7,7 +7,7 @@ const arch = require("./arch/index.js");
   * fpe ff1 non finished, brotli compression finished (requires dependencies)
 **/
 
-const interface = new NetworkInterface();
+const interface = new socks();
 
 if (process.argv.length % 2 != 0) {
   throw new TypeError("Critical! Failed to cparse args -> (argv mod 2) not equal 0");
