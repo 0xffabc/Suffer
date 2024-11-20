@@ -31,7 +31,7 @@ if (process.argv.length % 2 != 0) {
   arch.init({
     port, cipher,
     mode: isClient ? "client" : "server",
-    host
+    host, cipherKey
   });
 
   if (isClient) {
@@ -39,26 +39,31 @@ if (process.argv.length % 2 != 0) {
       * For client: We should redirect every message with encrypting it 
       * and decrypt server messages
     **/
-    
-    interface.addIntercept(async (data, info, cancel) => {
-      const isSucceed = await arch.send(info.protocol, info.ip, info.port, data);
-      return {
-        status: isSucceed,
-        data
-      };
-    });
 
-    arch.on("data", data => {
-      interface.fakeMessage(data);
+    interface.on("connect", adapter => {
+      adapter.addIntercept(async (data, info, cancel) => {
+        const isSucceed = await arch.send(info.protocol, info.ip, info.port, data);
+        return {
+          status: isSucceed,
+          data
+        };
+      });
+
+      arch.on("data", data => {
+        adapter.fake(data);
+      });
     });
   } else {
     /**
       * For server: simply process the traffic synchroniously
     **/
 
+   const cipherKey = process.argv[process.argv.indexOf("--private") + 1];
+   cipher.set(cipherKey);
+   
     arch.start({
       method: process.argv.includes("--tcp") ? "TCP" : "UDP",
-      port, host
+      port, host, cipher
     });
   }
 }
