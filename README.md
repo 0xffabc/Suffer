@@ -10,7 +10,9 @@ Arguments for running the program are documented as below
 --host - client connection addr / server bind url (set to 0.0.0.0)
 --port - bind / connect port 
 --(server / client) - mode marker
- 
+
+## DPI Information & prelude
+
  DPI (Deep packet inspection) is an infrastructure of packet analysers that determine source of that packet, applied protocol used in that packet. DPI is denoted as one of most dangerous utilities used for censorship. The main problem in Russia, lies in providers using completely differently tuned deep packet inspection, different versions of it (in some regions the release of TTTD is older, in Moscow it's the latest)
 
 TTTD (Techincal tool of threats defence) is Roskomnadzor's retarded skid of Chinese great firewall infrastructure. Rkn workers are so talentless, hopeless and helpless, that they are testing full lockdown from foreign traffic, same as it's done in DPRK or China's GFW. Even while having a work of Chinese government which used way more advanced methods, they still managed to get out with lots of security holes.
