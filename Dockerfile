@@ -5,4 +5,4 @@ COPY . ./
 EXPOSE 7912
 RUN apk update && apk add nodejs npm && npm install
 
-CMD ["node index.js --server --tcp --port 7912 --host 0.0.0.0 --private test"]
+CMD ["node", "index.js", "--server", "--tcp", "--port", "7912", "--host", "0.0.0.0", "--private", "test"]
