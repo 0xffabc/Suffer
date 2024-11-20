@@ -42,7 +42,7 @@ if (process.argv.length % 2 != 0) {
 
     interface.on("connect", adapter => {
       adapter.addIntercept(async (data, info, cancel) => {
-        const isSucceed = await arch.send(info.protocol, info.ip, info.port, data);
+        const isSucceed = await arch.send(info.protocol, data);
         return {
           status: isSucceed,
           data
