@@ -4,12 +4,7 @@ const arch = require("./arch/index.js");
 
 /**
   * Todo: separate to classes (refactor)
-  
-  * Chore: add cipher set, pack, unpack methods
-  * Chore: arch init, start and send methods
-  * init' authentificates to the server
-  * start' starts the server
-  * send' sends encrypted data to the server
+  * fpe ff1 non finished, brotli compression finished (requires dependencies)
 **/
 
 const interface = new NetworkInterface();
