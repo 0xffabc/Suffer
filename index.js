@@ -9,13 +9,13 @@ const arch = require("./arch/index.js");
 
 const interface = new socks();
 
-if ((process.argv.length - 1) % 2 != 0) {
-  throw new TypeError("Critical! Failed to cparse args -> (argv mod 2) not equal 0");
+if (!process.argv.includes("--client") && !process.argv.includes("--server")) {
+  throw new TypeError("Critical! Failed to cparse args -> unknown type of app");
 } else {
   const isClient = process.argv.includes("--client");
   const port = parseInt(process.argv[process.argv.indexOf("--port") + 1]) || 1080;
   const host = process.argv[process.argv.indexOf("--host") + 1] || "0.0.0.0";
-  const cipherKey = process.argv[process.argv.indexOf("--private") + 1];
+  const cipherKey = process.argv[process.argv.indexOf("--private") + 1] || "test";
 
   /**
     * Initialize cipher and client -> server
