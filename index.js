@@ -1,52 +1,66 @@
-const net = require("net");
-const dns = require("dns");
-const datagram = require("dgram");
-const udp = datagram.createSocket('udp4');
-const sockets = [];
-const fake = `HTTP/1.1 200 OK
-Connection: Keep-Alive
-Content-Type: text/html; charset=utf-8
-Content-Length: 1
+const socks = require("./socks/index.js");
+const cipher = require("./protoc/index.js");
+const arch = require("./arch/index.js");
 
-a`;
+/**
+  * Todo: separate to classes (refactor)
+  
+  * Chore: add cipher set, pack, unpack methods
+  * Chore: arch init, start and send methods
+  * init' authentificates to the server
+  * start' starts the server
+  * send' sends encrypted data to the server
+**/
 
-net.createServer(socket => {
-  udp.on("message", (msg, info) => socket.write([0, info.port, ...Buffer.from(info.address), ...msg]));
-  socket.on("data", data => {
-    const buf = Array.from(data);
-    switch (buf.shift()) {
-      case 0:
-        const port = buf.shift();
-        const addr = buf.splice(0, 4);
-        
-        udp.send(buf, 0, buf.length, port, `${addr[0]}.${addr[1]}.${addr[2]}.${addr[3]}`);
-        break;
-      case 1:
-        dns.lookup(String.fromCharCode(buf.slice(2, buf.length)), { family: buf[1] }, (err, solval) => {
-          const addr = solval[0].address;
-          socket.write([1, buf[0], Buffer.from(addr)]);
-        });
-        break;
-      case 2:
-        const isOpening = buf.shift() > 127;
-        const sockId = buf.shift();
-        
-        if (isOpening) {
-          sockets[sockId] = new net.Socket();
-          sockets[sockId].on("data", data => socket.write([2, sockId, ...data]));
-          sockets[sockId].on("close", err => {
-            socket.write([2, sockId, 2]);
-          });
-          sockets[sockId].on("error", err => socket.write([2, sockets[sockId]]));
-        } else if (sockets[sockId]) {
-          sockets[sockId].write(buf);
-        }
-        break;
-      default:
-        socket.write(fake);
-    }
-  }).on("error", () => {})
-    .on("close", () => {});
-}).listen(3000);
+const interface = new NetworkInterface();
 
-console.log("Running Suffer backend on port 3000.");
+if (process.argv.length % 2 != 0) {
+  throw new TypeError("Critical! Failed to cparse args -> (argv mod 2) not equal 0");
+} else {
+  const isClient = process.argv.includes("--client");
+  const port = parseInt(process.argv[process.argv.indexOf("--port") + 1]) || 1080;
+  const host = process.argv[process.argv.indexOf("--host") + 1] || "0.0.0.0";
+  const cipherKey = process.argv[process.argv.indexOf("--private") + 1];
+
+  /**
+    * Initialize cipher and client -> server
+    * Communication
+  **/
+
+  cipher.set(cipherKey);
+  arch.init({
+    port, cipher,
+    mode: isClient ? "client" : "server",
+    host
+  });
+
+  if (isClient) {
+    /**
+      * For client: We should redirect every message with encrypting it 
+      * and decrypt server messages
+    **/
+    
+    interface.addIntercept(async (data, info, cancel) => {
+      const isSucceed = await arch.send(info.protocol, info.ip, info.port, data);
+      return {
+        status: isSucceed,
+        data
+      };
+    });
+
+    arch.on("data", data => {
+      interface.fakeMessage(data);
+    });
+  } else {
+    /**
+      * For server: simply process the traffic synchroniously
+    **/
+
+    arch.start({
+      method: process.argv.includes("--tcp") ? "TCP" : "UDP",
+      port, host
+    });
+  }
+}
+
+console.log("[25%] Local proxy listening on 0.0.0.0:1080");
