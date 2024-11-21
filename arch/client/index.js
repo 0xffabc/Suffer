@@ -1,3 +1,5 @@
+const net = require("net");
+
 class Client {
   constructor(config) {
     console.log(`[client] connecting to relay`);
