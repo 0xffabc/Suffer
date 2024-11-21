@@ -8,13 +8,15 @@ module.exports = new class Cipher {
 
   async pack(data) {
     const packed = await msgpack.pack(data);
-    return brotli.compress(packed);
+    //const compressed = brotli.compress(packed);
+
+    return new Uint8Array(packed);
   }
 
   async unpack(data) {
-    const decoded = brotli.decompress(data);
-    const data = await msgpack.unpack(decoded);
+    // const decoded = brotli.decompress(data);
+    const unpacked = await msgpack.unpack(data);
 
-    return data;
+    return new Uint8Array(unpacked);
   }
 }

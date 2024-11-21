@@ -2,6 +2,7 @@ const net = require("net");
 
 class Server {
   constructor(config) {
+    this.interface = config.interface;
     this.cipher = config.cipher;
     this.server = net.createServer(socket => {
       socket.once("data", data => {
@@ -9,11 +10,7 @@ class Server {
 
         console.log(`[server] piping socket to ${data}`);
       });
-    });
-  }
-
-  start(config) {
-    this.server.listen(7912);
+    }).listen(7912);
   }
 }
 
