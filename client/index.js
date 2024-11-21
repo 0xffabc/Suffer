@@ -84,6 +84,8 @@ a`);
         return socket.end();
       }
 
+      socket.write(Buffer.from([5, 0, 0, destAddrType, ...host_raw, port >> 8, port & 0xFF]));
+
       const tunnel = new ClientTunnel(global.config.host, global.config.port, host_raw, port || 443);
 
       socket.on('data', packet => tunnel.send(packet));
