@@ -57,22 +57,25 @@ a`);
     socket.write(Buffer.from([5, 0]));
 
     socket.once('data', data => {
+      let host_raw;
       const cmd = data[1];
       const destAddrType = data[3];
       console.log('[protoc] set host/port pair', data);
 
       if (destAddrType === 1) {
         host = data.slice(4, 8).join('.');
+        host_raw = data.slice(4, 8);
         port = data.readUInt16BE(8);
       } else if (destAddrType === 3) {
         const addrLen = data[4];
         host = data.slice(5, 5 + addrLen).toString();
+        host_raw = data.slice(5, 5 + addrLen);
         port = data.readUInt16BE(5 + addrLen);
       } else {
         return socket.end();
       }
 
-      const tunnel = new ClientTunnel(global.config.host, global.config.port, host, port);
+      const tunnel = new ClientTunnel(global.config.host, global.config.port, host_raw, port || 443);
       
       socket.on('data', packet => tunnel.send(packet));
       tunnel.onmessage = packet => socket.write(packet);
