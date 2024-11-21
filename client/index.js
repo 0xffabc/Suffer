@@ -41,6 +41,7 @@ class ClientTunnel {
   }
 
   send(data) {
+    console.log(`[arch] writing message`, data);
     this.socket.write(new Uint8Array(data));
   }
 }

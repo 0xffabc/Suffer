@@ -18,10 +18,10 @@ const server = net.createServer(clientSocket => {
 
     const destinationSocket = net.createConnection({ host: destination, port: destPort }, () => {
       console.log('[server] Authentication successful. Initializing ciphers');
-
-      clientSocket.on('data', packet => destinationSocket.write(packet));
-      destinationSocket.on('data', packet => clientSocket.write(packet));
     });
+
+    clientSocket.on('data', packet => destinationSocket.write(packet));
+    destinationSocket.on('data', packet => clientSocket.write(packet));
 
     destinationSocket.on('error', (err) => {
       console.error('[server] Destination connection error:', err);
