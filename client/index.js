@@ -19,16 +19,20 @@ let port = 443;
 
 class ClientTunnel {
   constructor(host, port, destination, destPort) {
-    this.socket = net.createConnection({ host, port }, async () => {
+    this.socket = net.createConnection({
+      host,
+      port
+    });
+    this.socket.on('connection', () => {
       console.log(`[client] starting authentification process`);
       const message = Buffer.concat([
-        Buffer.from([destination.length]), 
-        Buffer.from(destination), 
+        Buffer.from([destination.length]),
+        Buffer.from(destination),
         Buffer.from([destPort >> 8, destPort & 0xFF])
       ]);
       this.socket.write(message);
-     
-      console.log('[suffer] authentification successful!');
+
+      console.log('[suffer] authentification successful!', message);
       console.log('You have been connected to the web via secure tunnel');
     });
 
@@ -49,13 +53,13 @@ net.createServer(async socket => {
     console.log('[authlib] new client, atm skip to none auth');
     const version = data[0];
     if (version !== 5) {
-     socket.write(`HTTP/1.1 200 OK
+      socket.write(`HTTP/1.1 200 OK
 Connection: Keep-Alive
 Content-Type: text/html; charset=utf-8
 Content-Length: 1
 
 a`);
-     return socket.end();
+      return socket.end();
     }
 
     const nMethods = data[1];
@@ -82,7 +86,7 @@ a`);
       }
 
       const tunnel = new ClientTunnel(global.config.host, global.config.port, host_raw, port || 443);
-      
+
       socket.on('data', packet => tunnel.send(packet));
       tunnel.onmessage = packet => socket.write(packet);
 
