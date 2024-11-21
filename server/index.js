@@ -1,24 +1,26 @@
 const net = require('net');
 
-const server = net.createServer((clientSocket) => {
-  console.log('[server] Client connected');
+const server = net.createServer(clientSocket => {
+  console.log('[server] Client connected, awaiting auth');
 
-  clientSocket.on('data', (data) => {
+  clientSocket.once('data', data => {
     if (data.length < 3) {
-      console.log('[server] Invalid authentication packet');
+      console.log('[server] Invalid authentication frame! Probably Deep packet inspection is used.');
       return clientSocket.end();
     }
 
     const destinationLength = data[0];
     const destination = data.slice(1, 1 + destinationLength).toString();
     const destPort = data[1 + destinationLength] << 8 | data[2 + destinationLength];
+    
     console.log(`[server] Authenticating to destination ${destination}:${destPort}`);
+    console.log(`[authlib1.5] Received authentification frame `, data);
 
     const destinationSocket = net.createConnection({ host: destination, port: destPort }, () => {
-      console.log('[server] Authentication successful!');
+      console.log('[server] Authentication successful. Initializing ciphers');
 
-      clientSocket.pipe(destinationSocket);
-      destinationSocket.pipe(clientSocket);
+      clientSocket.on('data', packet => destinationSocket.write(packet));
+      destinationSocket.on('data', packet => clientSocket.write(packet));
     });
 
     destinationSocket.on('error', (err) => {
