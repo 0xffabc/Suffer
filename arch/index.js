@@ -4,7 +4,6 @@
   * start' starts the server
 **/
 
-const net = require("net");
 const Client = require("./client/index.js");
 const Server = require("./server/index.js");
 
