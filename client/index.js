@@ -21,7 +21,13 @@ class ClientTunnel {
   constructor(host, port, destination, destPort) {
     this.socket = net.createConnection({ host, port }, async () => {
       console.log(`[client] starting authentification process`);
-      this.socket.write(new Uint8Array([destination.length, ...destination, destPort]));
+      const message = Buffer.concat([
+        Buffer.from([destination.length]), 
+        Buffer.from(destination), 
+        Buffer.from([destPort >> 8, destPort & 0xFF])
+      ]);
+      this.socket.write(message);
+     
       console.log('[suffer] authentification successful!');
       console.log('You have been connected to the web via secure tunnel');
     });
