@@ -11,7 +11,7 @@ module.exports = new class Architecture {
   init(config) {
     console.log(`[arch] loading config: ${config.host}:${config.port} ${config.isClient ? "client" : "server"}`);
 
-    if (config.isClient) {
+    if (config.mode == "client" || config.isClient) {
       Object.assign(this, new Client(config));
     } else {
       Object.assign(this, new Server(config));

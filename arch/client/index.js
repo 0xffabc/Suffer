@@ -8,7 +8,7 @@ class Client {
     this.socket = net.createConnection({ host: config.host, port: config.port }, () => {
       console.log(`[client] starting authentification process`);
 
-      socket.write(config.cipher.pack({
+      this.socket.write(config.cipher.pack({
         ip: config.ip
       }));
     });

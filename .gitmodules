@@ -1,9 +1,6 @@
 [submodule "socks"]
 	path = socks
 	url = https://github.com/0xffabc/SocksCap
-[submodule "MsgpackP"]
-	path = MsgpackP
-	url = https://github.com/0xffabc/MsgpackP
 [submodule "msgpack"]
 	path = msgpack
 	url = https://github.com/0xffabc/MsgpackP
