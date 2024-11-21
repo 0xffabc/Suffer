@@ -22,8 +22,7 @@ class ClientTunnel {
     this.socket = net.createConnection({
       host,
       port
-    });
-    this.socket.on('connection', () => {
+    }, () => {
       console.log(`[client] starting authentification process`);
       const message = Buffer.concat([
         Buffer.from([destination.length]),
@@ -35,7 +34,7 @@ class ClientTunnel {
       console.log('[suffer] authentification successful!', message);
       console.log('You have been connected to the web via secure tunnel');
     });
-
+   
     this.socket.on('error', _ => console.log('[  ERR!  ] Host returned error'));
     this.socket.on('data', _ =>
       this.onmessage(_));
