@@ -7,7 +7,8 @@ const offset = process.argv.indexOf(process.argv.find(_ =>
 const config = global.config = {
   endpoint: process.argv[offset + 1],
   port: process.argv[offset + 2],
-  server: !!process.argv[offset + 3]
+  server: process.argv[offset + 3] == "server",
+  localPort: process.argv[offset + 4] || 8000
 }
 
 console.log(`[config] Parsed from cmdline

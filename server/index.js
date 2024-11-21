@@ -11,8 +11,7 @@ const server = net.createServer((clientSocket) => {
 
     const destinationLength = data[0];
     const destination = data.slice(1, 1 + destinationLength).toString();
-    const destPort = data.readUInt16BE(1 + destinationLength);
-
+    const destPort = data[1 + destinationLength] << 8 | data[2 + destinationLength];
     console.log(`[server] Authenticating to destination ${destination}:${destPort}`);
 
     const destinationSocket = net.createConnection({ host: destination, port: destPort }, () => {

@@ -80,6 +80,6 @@ a`);
       socket.on('error', () => serverSocket.end());
     });
   });
-}).listen(global?.config?.port || 1080);
+}).listen(global?.config?.localPort || 1080);
 
 console.log('[suffer] local proxy ran');
