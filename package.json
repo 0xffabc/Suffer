@@ -1,26 +1,12 @@
-{      
- "name": "Suffer",                                    
- "version": "1",                                                    
- "description": "VPN for those, who need Internet",                             
- "main": "",                                                
- "scripts": {                                                             
-   "test": "echo \"Error: no test specified\" && exit 1"              
- },                                                                         
- "keywords": [                                                            
-   "vpn"," suffer"," censorship"                                                                 
- ],                                                                         
- "author": "0xffabc",                                             
- "license": "GNU",                                                      
- "repository": {                                                         
-   "type": "git",                                                     
-   "url": "git+https://github.com/https://github.com/0xffabc/Suffer.git"          
- },
- "dependencies": {
-   "brotli": "1.3.3"
- },
- "bugs": {                                                               
-    "url": "https://github.com/https://github.com/0xffabc/Suffer/issues"           
- },                                                                        
- "homepage": "https://github.com/https://github.com/0xffabc/Suffer#readme",      
- "publishConfig": { "registry": "https://npm.pkg.github.com/" }    
+{
+  "name": "socks5",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
 }
