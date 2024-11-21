@@ -38,6 +38,8 @@ if (!process.argv.includes("--client") && !process.argv.includes("--server")) {
     interface.on("connect", adapter => {
       adapter.addIntercept(async (data, info, cancel) => {
         const isSucceed = await arch.send(info.protocol, data);
+        console.log(`[adapter:0] casted msg`, info, data);
+        
         return {
           status: isSucceed,
           data
@@ -45,6 +47,7 @@ if (!process.argv.includes("--client") && !process.argv.includes("--server")) {
       });
 
       arch.on("data", data => {
+        console.log(`[adapter:0] forwarding from server`, data);
         adapter.fake(data);
       });
     });
@@ -55,11 +58,6 @@ if (!process.argv.includes("--client") && !process.argv.includes("--server")) {
 
    const cipherKey = process.argv[process.argv.indexOf("--private") + 1];
    cipher.set(cipherKey);
-   
-    arch.start({
-      method: process.argv.includes("--tcp") ? "TCP" : "UDP",
-      port, host, cipher
-    });
   }
 }
 
