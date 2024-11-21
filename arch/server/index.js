@@ -1,3 +1,5 @@
+const net = require("net");
+
 class Server {
   constructor(config) {
     this.cipher = config.cipher;
