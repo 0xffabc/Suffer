@@ -25,12 +25,11 @@ net.createServer(async socket => {
     const messageQueue = [];
 
     if (version != 5) {
-      socket.write(`HTTP/1.1 200 OK
-Connection: Keep-Alive
-Content-Type: text/html; charset=utf-8
-Content-Length: 1
-
-a`);
+      const response = new Response("a");
+      const buf = await response.arrayBuffer();
+     
+      socket.write(buf);
+     
       return socket.end();
     } else socket.write(Buffer.from([5, 0]));
    
