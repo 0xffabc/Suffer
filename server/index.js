@@ -31,7 +31,6 @@ const server = net.createServer(clientSocket => {
   });
 });
 
-const PORT = global.config.port;
-server.listen(PORT, () => {
+server.listen(global.config.port, () => {
   console.log(`[server] Listening on port ${PORT}`);
 });
