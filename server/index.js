@@ -8,8 +8,9 @@ net.createServer(clientSocket => {
     const { destPort, destination, splitComb } = ipParser.parse(data);
 
     const destinationSocket = net.createConnection({ host: destination, port: destPort }, () => {
+      if (splitComb.length) destinationSocket.write(splitComb);
+      
       console.log('[server] Authentication successful.');
-      if (splitComb.length > 0) destinationSocket.write(splitComb);
     });
 
     clientSocket.pipe(destinationSocket);
