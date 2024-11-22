@@ -1,5 +1,5 @@
 const ClientTunnel = require('./tunnel/index.js');
-const IpParser = require('../parsers/IpParser.js');
+const IpParser = require('./parsers/IpParser.js');
 const net = require('net');
 
 console.log('== Suffer v1.0 -> Proxy for penetrating censorship ==');
