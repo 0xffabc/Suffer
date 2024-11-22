@@ -3,6 +3,6 @@ WORKDIR /home
 
 COPY . ./
 EXPOSE 7912
-RUN apk update && apk add nodejs npm && npm install
+RUN apk update && apk add nodejs npm
 
 CMD ["node", "index.js", "0.0.0.0", "7912", "server", "1080"]
