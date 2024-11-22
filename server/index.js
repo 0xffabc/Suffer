@@ -12,12 +12,18 @@ const server = net.createServer(clientSocket => {
     const destinationLength = data[0];
     const destination = data.slice(1, 1 + destinationLength).join(".");
     const destPort = data[1 + destinationLength] << 8 | data[2 + destinationLength];
-    
+    const totalLength = 3 + destinationLength;
+    const splitComb = data.slice(totalLength, data.length);
+
     console.log(`[server] Authenticating to destination ${destination}:${destPort}`);
     console.log(`[authlib1.5] Received authentification frame `, data);
 
     const destinationSocket = net.createConnection({ host: destination, port: destPort }, () => {
       console.log('[server] Authentication successful. Initializing ciphers');
+      if (splitComb.length > 0) {
+        console.log(`[antidpi-detect?] Found merged part and added to queue`, splitComb);
+        destinationSocket.write(new Uint8Array(splitComb));
+      }
     });
 
     clientSocket.on('data', packet => destinationSocket.write(packet));
