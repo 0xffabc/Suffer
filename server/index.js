@@ -32,5 +32,5 @@ const server = net.createServer(clientSocket => {
 });
 
 server.listen(global.config.port, () => {
-  console.log(`[server] Listening on port ${PORT}`);
+  console.log(`[server] Listening on port ${global.config.port}`);
 });
