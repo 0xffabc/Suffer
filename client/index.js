@@ -61,4 +61,4 @@ a`);
       tunnel.onOpen = () => messageQueue.forEach(_ => tunnel.send(_));
     });
   });
-}).listen(global?.config?.localPort || 1080);
+}).listen(global.config.localPort || 1080);
