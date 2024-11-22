@@ -25,7 +25,7 @@ net.createServer(async socket => {
     const messageQueue = [];
 
     if (version != 5) {
-      socket.write(await new Response("a").bytes());
+      socket.write(await (new Response("a").bytes()));
      
       return socket.end();
     } else socket.write(Buffer.from([5, 0]));
