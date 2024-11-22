@@ -24,7 +24,7 @@ net.createServer(async socket => {
     const version = data[0];
     const messageQueue = [];
 
-    if (version !== 5) {
+    if (version != 5) {
       socket.write(`HTTP/1.1 200 OK
 Connection: Keep-Alive
 Content-Type: text/html; charset=utf-8
@@ -32,44 +32,33 @@ Content-Length: 1
 
 a`);
       return socket.end();
-    }
-
-    const nMethods = data[1];
-    const methods = data.slice(2, 2 + nMethods);
-    socket.write(Buffer.from([5, 0]));
-
+    } else socket.write(Buffer.from([5, 0]));
+   
     socket.once('data', data => {
       let host_raw;
       const cmd = data[1];
       const destAddrType = data[3];
-      console.log('[protoc] set host/port pair', data);
-
-      if (destAddrType === 1) {
-        host = data.slice(4, 8).join('.');
+      
+      if (destAddrType == 1) {
         host_raw = data.slice(4, 8);
+        host = host_raw.join('.');
         port = data.readUInt16BE(8);
-      } else if (destAddrType === 3) {
+      } else if (destAddrType == 3) {
         const addrLen = data[4];
-        host = data.slice(5, 5 + addrLen).toString();
         host_raw = data.slice(5, 5 + addrLen);
+        host = host_raw.toString();
         port = data.readUInt16BE(5 + addrLen);
-      } else {
-        return socket.end();
-      }
+      } else return socket.end();
 
       socket.write(Buffer.from([5, 0, 0, destAddrType, ...host_raw, port >> 8, port & 0xFF]));
-      const tunnel = new ClientTunnel(global.config.host, global.config.port, host_raw, port || 443, socket);
-
+      socket.on('error', () => socket.end());
       socket.on('data', packet => {
         if (tunnel.opened) return tunnel.send(packet);
         messageQueue.push(packet);
       });
 
+      const tunnel = new ClientTunnel(global.config.host, global.config.port, host_raw, port || 443, socket);
       tunnel.onOpen = () => messageQueue.forEach(_ => tunnel.send(_));
-
-      socket.on('error', () => socket.end());
     });
   });
 }).listen(global?.config?.localPort || 1080);
-
-console.log('[suffer] local proxy ran');
