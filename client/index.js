@@ -1,3 +1,4 @@
+const ClientTunnel = require('./tunnel/index.js');
 const net = require('net');
 
 console.log('== Suffer v1.0 -> Proxy for penetrating censorship ==');
@@ -16,36 +17,6 @@ let port = 443;
   * Note: for each socks5 connection we create a new
   * encrypted tunnel
 **/
-
-class ClientTunnel {
-  constructor(host, port, destination, destPort, socket) {
-    this.socket = net.createConnection({
-      host,
-      port
-    }, () => {
-      console.log(`[client] starting authentification process`);
-      const message = Buffer.concat([
-        Buffer.from([destination.length]),
-        Buffer.from(destination),
-        Buffer.from([destPort >> 8, destPort & 0xFF])
-      ]);
-      this.socket.write(message);
-      this.onOpen();
-      console.log('[suffer] authentification successful!', message);
-      console.log('You have been connected to the web via secure tunnel');
-    });
-   
-    this.socket.on('error', _ => console.log('[  ERR!  ] Host returned error'));
-    
-    this.socket.on('data', _ =>
-      this.onmessage(_));
-  }
-
-  send(data) {
-    console.log(`[arch] writing message`, data);
-    this.socket.write(new Uint8Array(data));
-  }
-}
 
 net.createServer(async socket => {
   let arch;

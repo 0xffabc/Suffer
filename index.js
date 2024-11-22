@@ -1,6 +1,3 @@
-
-console.log('[*] Reading config');
-
 const offset = process.argv.indexOf(process.argv.find(_ =>
   _.includes('index.js')));
 
@@ -16,6 +13,5 @@ Tunnel endpoint -> ${config.endpoint}
 Port -> ${config.port}
 Running server? -> ${config.server}`);
 
-if (config.server) {
-  require("./server/index.js");
-} else require("./client/index.js");
+if (config.server) require("./server/index.js");
+else require("./client/index.js");
