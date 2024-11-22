@@ -65,11 +65,7 @@ a`);
         messageQueue.push(packet);
       });
 
-      tunnel.onOpen = () => {
-        console.log(`[socks] attached listeners`);
-        messageQueue.forEach(_ => tunnel.send(_));
-        tunnel.onmessage = packet => socket.write(packet);
-      }
+      tunnel.onOpen = () => messageQueue.forEach(_ => tunnel.send(_));
 
       socket.on('error', () => socket.end());
     });
