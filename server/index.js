@@ -8,7 +8,7 @@ const server = net.createServer(clientSocket => {
       console.log('[server] Invalid authentication frame! Probably Deep packet inspection is used.');
       return clientSocket.end();
     }
-
+   
     const destinationLength = data[0];
     const destination = data.slice(1, 1 + destinationLength).join(".");
     const destPort = data[1 + destinationLength] << 8 | data[2 + destinationLength];

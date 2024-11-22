@@ -18,7 +18,7 @@ let port = 443;
 **/
 
 class ClientTunnel {
-  constructor(host, port, destination, destPort) {
+  constructor(host, port, destination, destPort, socket) {
     this.socket = net.createConnection({
       host,
       port
@@ -30,12 +30,13 @@ class ClientTunnel {
         Buffer.from([destPort >> 8, destPort & 0xFF])
       ]);
       this.socket.write(message);
-
+      this.onOpen();
       console.log('[suffer] authentification successful!', message);
       console.log('You have been connected to the web via secure tunnel');
     });
    
     this.socket.on('error', _ => console.log('[  ERR!  ] Host returned error'));
+    
     this.socket.on('data', _ =>
       this.onmessage(_));
   }
@@ -52,6 +53,8 @@ net.createServer(async socket => {
   socket.once('data', data => {
     console.log('[authlib] new client, atm skip to none auth');
     const version = data[0];
+    const messageQueue = [];
+
     if (version !== 5) {
       socket.write(`HTTP/1.1 200 OK
 Connection: Keep-Alive
@@ -85,13 +88,25 @@ a`);
         return socket.end();
       }
 
-      const tunnel = new ClientTunnel(global.config.host, global.config.port, host_raw, port || 443);
-
       socket.write(Buffer.from([5, 0, 0, destAddrType, ...host_raw, port >> 8, port & 0xFF]));
-      socket.on('data', packet => tunnel.send(packet));
-      tunnel.onmessage = packet => socket.write(packet);
+      const tunnel = new ClientTunnel(global.config.host, global.config.port, host_raw, port || 443, socket);
+      let opened;
 
-      socket.on('error', () => serverSocket.end());
+      socket.on('data', packet => {
+        if (opened) return;
+        messageQueue.push(packet);
+      });
+
+      tunnel.onOpen = () => {
+        opened = true;
+
+        console.log(`[socks] attached listeners`);
+        messageQueue.forEach(_ => tunnel.send(_));
+        socket.on('data', packet => tunnel.send(packet));
+        tunnel.onmessage = packet => socket.write(packet);
+      }
+
+      socket.on('error', () => socket.end());
     });
   });
 }).listen(global?.config?.localPort || 1080);
