@@ -1,10 +1,10 @@
 const ClientTunnel = require('./tunnel/index.js');
+const IpParser = require('./parsers/IpParser.js');
 const net = require('net');
 
 console.log('== Suffer v1.0 -> Proxy for penetrating censorship ==');
 
-let host = '0.0.0.0';
-let port = 443;
+const ipParser = new IpParser();
 
 /**
   * Create socks5 server. We don't need authentification
@@ -35,20 +35,7 @@ a`);
     } else socket.write(Buffer.from([5, 0]));
    
     socket.once('data', data => {
-      let host_raw;
-      const cmd = data[1];
-      const destAddrType = data[3];
-      
-      if (destAddrType == 1) {
-        host_raw = data.slice(4, 8);
-        host = host_raw.join('.');
-        port = data.readUInt16BE(8);
-      } else if (destAddrType == 3) {
-        const addrLen = data[4];
-        host_raw = data.slice(5, 5 + addrLen);
-        host = host_raw.toString();
-        port = data.readUInt16BE(5 + addrLen);
-      } else return socket.end();
+      const { host_raw, port, host, destAddrType } = ipParser.parse(data);
 
       socket.write(Buffer.from([5, 0, 0, destAddrType, ...host_raw, port >> 8, port & 0xFF]));
       socket.on('error', () => socket.end());
