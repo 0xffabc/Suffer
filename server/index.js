@@ -4,15 +4,12 @@ const IpParser = require('./parsers/IpParser.js');
 const ipParser = new IpParser();
 
 net.createServer(clientSocket => {
-  console.log('[server] Client connected, awaiting auth');
-
   clientSocket.once('data', data => {
-    if (data.length < 3) return clientSocket.end();
     const { destPort, destination, splitComb } = ipParser.parse(data);
 
     const destinationSocket = net.createConnection({ host: destination, port: destPort }, () => {
-      console.log('[server] Authentication successful. Initializing ciphers');
-      if (splitComb.length > 0) destinationSocket.write(new Uint8Array(splitComb));
+      console.log('[server] Authentication successful.');
+      if (splitComb.length > 0) destinationSocket.write(splitComb);
     });
 
     clientSocket.pipe(destinationSocket);
