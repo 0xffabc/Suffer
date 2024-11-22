@@ -1,16 +1,14 @@
 const net = require('net');
+const IpParser = require('./parsers/IpParser.js');
 
-const server = net.createServer(clientSocket => {
+const ipParser = new IpParser();
+
+net.createServer(clientSocket => {
   console.log('[server] Client connected, awaiting auth');
 
   clientSocket.once('data', data => {
     if (data.length < 3) return clientSocket.end();
-   
-    const destinationLength = data[0];
-    const destination = data.slice(1, 1 + destinationLength).join('.');
-    const destPort = data[1 + destinationLength] << 8 | data[2 + destinationLength];
-    const totalLength = 3 + destinationLength;
-    const splitComb = data.slice(totalLength, data.length);
+    const { destPort, destination, splitComb } = ipParser.parse(data);
 
     const destinationSocket = net.createConnection({ host: destination, port: destPort }, () => {
       console.log('[server] Authentication successful. Initializing ciphers');
@@ -18,16 +16,9 @@ const server = net.createServer(clientSocket => {
     });
 
     clientSocket.pipe(destinationSocket);
-    destinationSocket.pipe(clientSocket);
-
     clientSocket.on('error', err => destinationSocket.end());
-    destinationSocket.on('error', err => {
-      console.error('[server] Destination connection error:', err);
-      clientSocket.end();
-    });
+    
+    destinationSocket.on('error', err => clientSocket.end());
+    destinationSocket.pipe(clientSocket);
   });
-});
-
-server.listen(global.config.port, () => {
-  console.log(`[server] Listening on port ${global.config.port}`);
-});
+}).listen(global.config.port, () => console.log(`[server] Listening on port ${global.config.port}`));
