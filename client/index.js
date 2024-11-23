@@ -8,7 +8,7 @@ console.log('== Suffer v1.0 -> Proxy for penetrating censorship ==');
 class Client {
   constructor(socket) {
     this.ipParser = new IpParser();
-    this.logger = new Logger();
+    this.logger = new Logger('Client');
 
     this.fakePacket = new Response("a").bytes();
     this.authPacket = Buffer.from([5, 0]);
