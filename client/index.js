@@ -43,7 +43,7 @@ class Client {
 
     this.log('Estabishing connection to ' + host_raw.join('.') + ':' + port);
     this.accept(host_raw, port, destAddrType);
-    this.socket.on('error', () => this.socket.end());
+    this.socket.on('error', this.socket.end.bind(this.socket));
     this.socket.on('data', packet => {
       if (tunnel.opened) return tunnel.send(packet);
       this.messageQueue.push(packet);
