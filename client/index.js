@@ -1,5 +1,6 @@
 const ClientTunnel = require('./tunnel/index.js');
 const IpParser = require('./parsers/IpParser.js');
+const Logger = require('../logger/index.js');
 const net = require('net');
 
 console.log('== Suffer v1.0 -> Proxy for penetrating censorship ==');
@@ -7,6 +8,7 @@ console.log('== Suffer v1.0 -> Proxy for penetrating censorship ==');
 class Client {
   constructor(socket) {
     this.ipParser = new IpParser();
+    this.logger = new Logger();
 
     this.fakePacket = new Response("a").bytes();
     this.authPacket = Buffer.from([5, 0]);
@@ -15,10 +17,6 @@ class Client {
     this.socket = socket;
 
     this.startAuth();
-  }
-
-  log(data) {
-    console.log(`[${new Date().toLocaleTimeString()}] ${data}`);
   }
 
   onHTTPS() {
@@ -41,7 +39,7 @@ class Client {
   
     tunnel.onOpen = () => this.messageQueue.forEach(tunnel.send.bind(tunnel));
 
-    this.log('Estabishing connection to ' + host_raw.join('.') + ':' + port);
+    this.logger.log('Estabishing connection to ' + host_raw.join('.') + ':' + port);
     this.accept(host_raw, port, destAddrType);
     this.socket.on('error', this.socket.end.bind(this.socket));
     this.socket.on('data', packet => {
