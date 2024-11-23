@@ -30,7 +30,7 @@ class Client {
     this.socket.once('data', data => {
       if (data[0] != 5) return this.onHTTPS();
       
-      this.socket.send(this.authPacket);
+      this.socket.write(this.authPacket);
       this.socket.once('data', data => this.processURL(data));
     });
   }
