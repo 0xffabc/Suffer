@@ -15,15 +15,19 @@ class ClientTunnel {
       this.socket.write(message);
       this.onOpen();
 
-      console.log('[suffer] authentification successful!', message);
+      this.log('authentification successful!', message);
     });
 
-    this.socket.on('error', _ => console.log('[  ERR!  ] Host returned error'));
+    this.socket.on('error', _ => this.log('Host returned error!!', _));
     this.socket.on('data', _ => socket.write(_));
   }
 
+  log(...data) {
+    console.log(`[${new Date().toLocaleTimeString()}] ${data.join(" ")}`);
+  }
+
   send(data) {
-    console.log(`[arch] writing message`, data);
+    this.log('writing message', data);
     this.socket.write(new Uint8Array(data));
   }
 }
