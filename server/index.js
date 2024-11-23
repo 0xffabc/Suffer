@@ -23,9 +23,9 @@ class Server {
     });
 
     this.socket.pipe(this.destSocket);
-    this.socket.on('error', err => this.destSocket.end());
+    this.socket.on('error', this.destSocket.end.bind(this.destSocket));
     
-    this.destSocket.on('error', err => this.socket.end());
+    this.destSocket.on('error', this.socket.end.bind(this.socket));
     this.destSocket.pipe(this.socket);
   }
 }
