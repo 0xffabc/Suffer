@@ -4,7 +4,7 @@
 
 Project todo:
 
-1. Refactor and split code by little parts
+1. Refactor and split code by little parts - ✅
 2. Add fpe encryption and packing
 3. Add UDP Support
  
