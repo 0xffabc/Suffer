@@ -3,7 +3,7 @@ const Logger = require('../../logger/index.js');
 
 class ClientTunnel {
   constructor(host, port, destination, destPort, socket) {
-    this.logger = new Logger();
+    this.logger = new Logger('ClientTunnel');
     this.socket = net.createConnection({
       host,
       port
