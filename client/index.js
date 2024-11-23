@@ -4,7 +4,7 @@ const net = require('net');
 
 console.log('== Suffer v1.0 -> Proxy for penetrating censorship ==');
 
-class Server {
+class Client {
   constructor(socket) {
     this.ipParser = new IpParser();
 
@@ -55,5 +55,5 @@ class Server {
 }
 
 net.createServer(socket => {
-  new Server(socket);
+  new Client(socket);
 }).listen(global.config.localPort || 1080);
