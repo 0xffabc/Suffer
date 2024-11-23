@@ -27,10 +27,10 @@ class Client {
   }
 
   startAuth() {
-    socket.once('data', data => {
+    this.socket.once('data', data => {
       if (data[0] != 5) return this.onHTTPS();
 
-      socket.once('data', data => this.processURL(data));
+      this.socket.once('data', data => this.processURL(data));
     });
   }
 
