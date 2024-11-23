@@ -1,22 +1,35 @@
 const net = require('net');
 const IpParser = require('./parsers/IpParser.js');
 
-const ipParser = new IpParser();
+class Server {
+  constructor(socket) {
+    this.socket = socket;
+    this.ipParser = new IpParser();
+  }
+
+  log(...data) {
+    console.log(`[${new Date().toLocaleTimeString()}] ${data.join('.')}`);
+  }
+
+  start() {
+    this.socket.once('data', data => {
+      const { port, host, splitComb } = ipParser.parse(data);
+  
+      this.destSocket = net.createConnection({ host, port }, () => {
+        if (splitComb.length) this.destSocket.write(splitComb);
+        
+        this.log('[server] Authentication successful.');
+      });
+  
+      this.socket.pipe(this.destSocket);
+      this.socket.on('error', err => this.destSocket.end());
+      
+      this.destSocket.on('error', err => this.socket.end());
+      this.destSocket.pipe(this.socket);
+    });
+  }
+}
 
 net.createServer(clientSocket => {
-  clientSocket.once('data', data => {
-    const { destPort, destination, splitComb } = ipParser.parse(data);
-
-    const destinationSocket = net.createConnection({ host: destination, port: destPort }, () => {
-      if (splitComb.length) destinationSocket.write(splitComb);
-      
-      console.log('[server] Authentication successful.');
-    });
-
-    clientSocket.pipe(destinationSocket);
-    clientSocket.on('error', err => destinationSocket.end());
-    
-    destinationSocket.on('error', err => clientSocket.end());
-    destinationSocket.pipe(clientSocket);
-  });
+  new Server(clientSocket).start();
 }).listen(global.config.port, () => console.log(`[server] Listening on port ${global.config.port}`));
