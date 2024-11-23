@@ -37,7 +37,7 @@ class Client {
 
   processURL(data) {
     const { host_raw, port, destAddrType } = this.ipParser.parse(data);
-    const tunnel = new ClientTunnel(global.config.host, global.config.port, host_raw, port || 443, this.socket);
+    const tunnel = new ClientTunnel(global.config.host, global.config.port, host_raw, port, this.socket);
   
     tunnel.onOpen = () => this.messageQueue.forEach(tunnel.send.bind(tunnel));
 
