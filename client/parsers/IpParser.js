@@ -7,13 +7,13 @@ class IpParser {
       case 1:
         host_raw = data.slice(4, 8);
         host = host_raw.join('.');
-        port = data.readUInt16BE(8);
+        port = data.readUInt16BE(8) || 443;
         break;
       case 3:
         const addrLen = data[4];
         host_raw = data.slice(5, 5 + addrLen);
         host = host_raw.toString();
-        port = data.readUInt16BE(5 + addrLen);
+        port = data.readUInt16BE(5 + addrLen) || 443;
       break;
     }
 
