@@ -3,7 +3,7 @@ const fs = require('fs');
 class Logger {
   constructor(className) {
     this.className = className;
-    this.initTime = new Date().toLocaleTimeString();
+    this.initTime = new Date().toISOString();
     this.stream = fs.createWriteStream(`logs/${this.initTime}.log`, { flags: 'a+' });
   }
 
