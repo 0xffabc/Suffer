@@ -29,7 +29,7 @@ class Client {
       if (data[0] != 5) return this.onHTTPS();
       
       this.socket.write(this.authPacket);
-      this.socket.once('data', data => this.processURL(data));
+      this.socket.once('data', this.processURL.bind(this));
     });
   }
 
