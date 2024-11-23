@@ -1,7 +1,9 @@
 const net = require('net');
+const Logger = require('../../logger/index.js');
 
 class ClientTunnel {
   constructor(host, port, destination, destPort, socket) {
+    this.logger = new Logger();
     this.socket = net.createConnection({
       host,
       port
@@ -15,19 +17,15 @@ class ClientTunnel {
       this.socket.write(message);
       this.onOpen();
 
-      this.log('authentification successful!', message);
+      this.logger.log('authentification successful!', message);
     });
 
-    this.socket.on('error', _ => this.log('Host returned error!!', _));
+    this.socket.on('error', _ => this.logger.log('Host returned error!!', _));
     this.socket.on('data', _ => socket.write(_));
   }
 
-  log(...data) {
-    console.log(`[${new Date().toLocaleTimeString()}] ${data.join(" ")}`);
-  }
-
   send(data) {
-    this.log('writing message', data);
+    this.logger.log('writing message', data);
     this.socket.write(new Uint8Array(data));
   }
 }
