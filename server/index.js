@@ -21,11 +21,24 @@ class Server {
       this.logger.log('Split comb is ', splitComb);
     });
 
-    this.socket.pipe(this.destSocket);
-    this.socket.on('error', this.destSocket.end.bind(this.destSocket));
+    this.socket.on('error', this.closeSocket.bind(this));
+    this.socket.on('end', this.closeSocket.bind(this));
+    this.socket.on('close', this.closeSocket.bind(this));
     
-    this.destSocket.on('error', this.socket.end.bind(this.socket));
+    this.destSocket.on('error', this.closeSocket.bind(this));
+    this.destSocket.on('end', this.closeSocket.bind(this));
+    this.destSocket.on('close', this.closeSocket.bind(this));
+    
     this.destSocket.pipe(this.socket);
+    this.socket.pipe(this.destSocket);
+  }
+
+  closeSocket() {
+    this.socket.unpipe(this.destSocket);
+    this.destSocket.unpipe(this.socket);
+    
+    this.socket.end();
+    this.destSocket.end();
   }
 }
 
