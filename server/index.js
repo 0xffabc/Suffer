@@ -17,6 +17,7 @@ class Server {
 
   start(data) {
     const { port, host, splitComb } = this.ipParser.parse(data);
+    this.logger.log('Connecting to', port, host);
   
     this.destSocket = net.createConnection({ host, port }, () => {
       if (splitComb.length) this.destSocket.write(splitComb);
