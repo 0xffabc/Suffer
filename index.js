@@ -1,12 +1,4 @@
-const offset = process.argv.indexOf(process.argv.find(_ =>
-  _.includes('index.js')));
-
-const config = global.config = {
-  endpoint: process.argv[offset + 1],
-  port: process.argv[offset + 2],
-  server: process.argv[offset + 3] == "server",
-  localPort: process.argv[offset + 4] || 8000
-}
+const config = require('./config/index.js');
 
 console.log(`[config] Parsed from cmdline
 Tunnel endpoint -> ${config.endpoint}
