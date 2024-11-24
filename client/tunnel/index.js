@@ -10,13 +10,13 @@ class ClientTunnel {
     this.socket = net.createConnection({
       host,
       port
-    }, () => {
+    }, async () => {
       this.opened = true;
-      const message = Buffer.concat([
+      const message = await this.cipher.encrypt(Buffer.concat([
         Buffer.from([destination.length]),
         Buffer.from(destination),
         Buffer.from([destPort >> 8, destPort])
-      ]);
+      ]));
       
       this.send(message);
       this.onOpen();
