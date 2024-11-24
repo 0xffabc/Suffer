@@ -12,7 +12,7 @@ class Client {
     this.logger = new Logger('Client');
     this.config = new Config();
 
-    this.fakePacket = new Response("a").bytes();
+    this.fakePacket = new Response('a').bytes();
     this.authPacket = Buffer.from([5, 0]);
 
     this.messageQueue = [];
