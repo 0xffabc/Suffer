@@ -1,6 +1,6 @@
  # Suffer 
 
- **Warning! This project is still under development. Don't use it on production servers, because you can be greylisted for proxy/vpn**
+> **Warning! This project is still under development. Don't use it on production servers, because you can be greylisted for proxy/vpn**
 
 Project todo:
 
