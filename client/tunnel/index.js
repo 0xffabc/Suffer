@@ -12,8 +12,6 @@ class ClientTunnel {
       port
     }, () => {
       this.opened = true;
-      this.cipher.init(this.socket, socket);
-      
       const message = Buffer.concat([
         Buffer.from([destination.length]),
         Buffer.from(destination),
@@ -23,6 +21,7 @@ class ClientTunnel {
       this.onOpen();
 
       this.logger.log('authentification successful!', message);
+      this.cipher.init(this.socket, socket);
     });
 
     this.socket.on('error', _ => this.logger.log('Host returned error!!', _));
