@@ -1,5 +1,6 @@
 const util = require('util');
 const zlib = require('zlib');
+
 const brotliCompress = util.promisify(zlib.brotliCompress);
 const brotliDecompress = util.promisify(zlib.brotliDecompress);
 
@@ -10,12 +11,16 @@ class Cipher {
 
   // TODO: Add actual encryption
   async encrypt(data) {
+    console.log(data);
     const compressed = await brotliCompress(data);
+    console.log(compressed);
     return compressed;
   }
 
   async decrypt(data) {
+    console.log(data);
     const decompressed = await brotliDecompress(data);
+    console.log(decompressed);
     return decompressed;
   }
   
