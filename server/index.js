@@ -15,8 +15,8 @@ class Server {
     this.socket.once('data', this.start.bind(this));
   }
 
-  start(data) {
-    const { port, host, splitComb } = this.ipParser.parse(data);
+  async start(data) {
+    const { port, host, splitComb } = this.ipParser.parse(await this.cipher.decrypt(data));
     this.logger.log('Connecting to', port, host);
   
     this.destSocket = net.createConnection({ host, port }, () => {
