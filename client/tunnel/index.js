@@ -25,7 +25,7 @@ class ClientTunnel {
     });
 
     this.socket.on('error', _ => this.logger.log('Host returned error!!', _));
-    this.socket.on('data', _ => socket.write(_));
+    this.socket.on('data', _ => socket.write(this.cipher.decrypt(_)));
   }
 
   send(data) {
