@@ -27,7 +27,7 @@ class Cipher {
 
     receiver.write = new Proxy(receiver.write, {
       __proto__: null,
-      apply(targetObj, thisObj, argsArr) {
+      apply: (targetObj, thisObj, argsArr) => {
         argsArr[0] = this.decrypt(argsArr[0]);
         
         return targetObj.apply(thisObj, argsArr);
@@ -41,7 +41,7 @@ class Cipher {
 
     sender.write = new Proxy(sender.write, {
       __proto__: null,
-      apply(targetObj, thisObj, argsArr) {
+      apply: (targetObj, thisObj, argsArr) => {
         argsArr[0] = this.encrypt(argsArr[0]);
         
         return targetObj.apply(thisObj, argsArr);
