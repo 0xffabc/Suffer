@@ -1,17 +1,22 @@
+const util = require('util');
+const zlib = require('zlib');
+const brotliCompress = util.promisify(zlib.brotliCompress);
+const brotliDecompress = util.promisify(zlib.brotliDecompress);
 
 class Cipher {
   constructor(key = [0, 1, 0]) {
     this.key = key;
   }
 
-  // !todo
-  encrypt(data) {
-    return data;
+  // TODO: Add actual encryption
+  async encrypt(data) {
+    const compressed = await brotliCompress(data);
+    return compressed;
   }
 
-  // !todo
-  decrypt(data) {
-    return data;
+  async decrypt(data) {
+    const decompressed = await brotliDecompress(data);
+    return decompressed;
   }
   
   init(sender, receiver) {
@@ -27,8 +32,8 @@ class Cipher {
 
     receiver.write = new Proxy(receiver.write, {
       __proto__: null,
-      apply: ((targetObj, thisObj, argsArr) => {
-        argsArr[0] = this.decrypt(argsArr[0]);
+      apply: async ((targetObj, thisObj, argsArr) => {
+        argsArr[0] = await this.decrypt(argsArr[0]);
         
         return targetObj.apply(thisObj, argsArr);
       }).bind(this)
@@ -41,8 +46,8 @@ class Cipher {
 
     sender.write = new Proxy(sender.write, {
       __proto__: null,
-      apply: ((targetObj, thisObj, argsArr) => {
-        argsArr[0] = this.encrypt(argsArr[0]);
+      apply: async ((targetObj, thisObj, argsArr) => {
+        argsArr[0] = await this.encrypt(argsArr[0]);
         
         return targetObj.apply(thisObj, argsArr);
       }).bind(this)
