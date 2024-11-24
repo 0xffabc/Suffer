@@ -13,7 +13,7 @@ class Config {
   }
 
   get server() {
-    return process.argv[this.offset + 3];
+    return !!process.argv[this.offset + 3];
   }
 
   get localPort() {
