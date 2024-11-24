@@ -33,10 +33,10 @@ class Server {
     this.destSocket.on('end', this.closeSocket.bind(this));
     this.destSocket.on('close', this.closeSocket.bind(this));
     
-    this.destSocket.on('data', data => 
-      this.socket.write(this.cipher.encrypt(data)));
-    this.socket.on('data', data => 
-      this.destSocket.write(this.cipher.decrypt(data)));
+    this.destSocket.on('data', async data => 
+      this.socket.write(await this.cipher.encrypt(data)));
+    this.socket.on('data', async data => 
+      this.destSocket.write(await this.cipher.decrypt(data)));
   }
 
   closeSocket() {
