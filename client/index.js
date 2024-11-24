@@ -1,6 +1,7 @@
 const ClientTunnel = require('./tunnel/index.js');
 const IpParser = require('./parsers/IpParser.js');
 const Logger = require('../logger/index.js');
+const Config = require('../config/index.js');
 const net = require('net');
 
 console.log('== Suffer v1.0 -> Proxy for penetrating censorship ==');
@@ -9,6 +10,7 @@ class Client {
   constructor(socket) {
     this.ipParser = new IpParser();
     this.logger = new Logger('Client');
+    this.config = new Config();
 
     this.fakePacket = new Response("a").bytes();
     this.authPacket = Buffer.from([5, 0]);
@@ -35,7 +37,7 @@ class Client {
 
   processURL(data) {
     const { host_raw, port, destAddrType } = this.ipParser.parse(data);
-    const tunnel = new ClientTunnel(global.config.host, global.config.port, host_raw, port, this.socket);
+    const tunnel = new ClientTunnel(this.config.host, this.config.port, host_raw, port, this.socket);
   
     tunnel.onOpen = () => this.messageQueue.forEach(tunnel.send.bind(tunnel));
 
@@ -55,4 +57,4 @@ class Client {
 
 net.createServer(socket => {
   new Client(socket);
-}).listen(global.config.localPort || 1080);
+}).listen(new Config().localPort);
