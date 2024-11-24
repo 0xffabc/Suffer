@@ -1,12 +1,14 @@
 const net = require('net');
 const IpParser = require('./parsers/IpParser.js');
 const Logger = require('../logger/index.js');
+const Config = require('../config/index.js');
 
 class Server {
   constructor(socket) {
     this.socket = socket;
     this.ipParser = new IpParser();
     this.logger = new Logger('Server');
+    this.config = new Config();
 
     this.socket.once('data', this.start.bind(this));
   }
@@ -44,4 +46,4 @@ class Server {
 
 net.createServer(clientSocket => {
   new Server(clientSocket);
-}).listen(global.config.port, () => console.log(`[server] Listening on port ${global.config.port}`));
+}).listen(new Config().port, () => console.log(`[*] server listening!`));
