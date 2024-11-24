@@ -11,14 +11,14 @@ class ClientTunnel {
       host,
       port
     }, async () => {
-      this.opened = true;
-      const message = await this.cipher.encrypt(Buffer.concat([
+      const message = Buffer.concat([
         Buffer.from([destination.length]),
         Buffer.from(destination),
         Buffer.from([destPort >> 8, destPort])
-      ]));
+      ]);
       
-      this.send(message);
+      await this.send(message);
+      this.opened = true;
       this.onOpen();
 
       this.logger.log('authentification successful!', message);
