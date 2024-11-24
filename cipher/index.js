@@ -1,5 +1,6 @@
 const util = require('util');
 const zlib = require('zlib');
+const Logger = require('../logger/index.js');
 
 const brotliCompress = util.promisify(zlib.brotliCompress);
 const brotliDecompress = util.promisify(zlib.brotliDecompress);
@@ -7,20 +8,20 @@ const brotliDecompress = util.promisify(zlib.brotliDecompress);
 class Cipher {
   constructor(key = [0, 1, 0]) {
     this.key = key;
+    this.logger = new Logger('Compressor');
   }
 
-  // TODO: Add actual encryption
+  // TODO: Add actual encryption via tls module
   async encrypt(data) {
-    console.log(data);
+    this.logger.log(data, compressed);
     const compressed = await brotliCompress(data);
-    console.log(compressed);
     return compressed;
   }
 
   async decrypt(data) {
-    console.log(data);
+    this.logger.log(data);
     const decompressed = await brotliDecompress(data);
-    console.log(decompressed);
+    this.logger.log(decompressed);
     return decompressed;
   }
   
