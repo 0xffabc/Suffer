@@ -9,18 +9,18 @@ class Cipher {
   constructor(key = [0, 1, 0]) {
     this.key = key;
     this.logger = new Logger('Compressor');
+
+    this.logger.log('Compressor init, TODO: Fix Brotli increasing packet size 45x');
   }
 
   // TODO: Add actual encryption via tls module
   async encrypt(data) {
-    //const compressed = await brotliCompress(data);
-    this.logger.log('Sending', data);
+    //data = await brotliCompress(data);
     return new Uint8Array(data);
   }
 
   async decrypt(data) {
-    //const decompressed = await brotliDecompress(data);
-    this.logger.log('Receiving', data);
+    //data = await brotliDecompress(data);
     return new Uint8Array(data);
   }
 }
