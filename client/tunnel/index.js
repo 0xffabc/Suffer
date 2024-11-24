@@ -17,11 +17,11 @@ class ClientTunnel {
         Buffer.from(destination),
         Buffer.from([destPort >> 8, destPort])
       ]);
-      this.socket.write(message);
+      
+      this.send(message);
       this.onOpen();
 
       this.logger.log('authentification successful!', message);
-      this.cipher.init(this.socket, socket);
     });
 
     this.socket.on('error', _ => this.logger.log('Host returned error!!', _));
@@ -30,7 +30,7 @@ class ClientTunnel {
 
   send(data) {
     this.logger.log('writing message', data);
-    this.socket.write(new Uint8Array(data));
+    this.socket.write(this.cipher.encrypt(new Uint8Array(data)));
   }
 }
 
