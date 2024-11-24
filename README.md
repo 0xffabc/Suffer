@@ -5,7 +5,7 @@
 Project todo:
 
 1. Refactor and split code by little parts - ✅
-2. Add fpe encryption and packing
+2. Add fpe encryption and packing - 🟠
 3. Add UDP Support
  
  This project is a collection of my self made utils, experiments and solutions on bypassing complex models with DPI (Deep packet inspection) combined with VPN protocols blocking and aggressive censorship. It's mainly centered around Suffer VPN protocol server, which is meant to be easily deployable (Written in Node.js!) and easily configurable (All-default values with already good strength level), while maintaining main principles in case if it all will work fine.
