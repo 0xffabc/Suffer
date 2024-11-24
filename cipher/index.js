@@ -14,14 +14,14 @@ class Cipher {
   // TODO: Add actual encryption via tls module
   async encrypt(data) {
     const compressed = await brotliCompress(data);
-    this.logger.log(data, compressed);
+    this.logger.log('Sending', compressed);
     return compressed;
   }
 
   async decrypt(data) {
     this.logger.log(data);
     const decompressed = await brotliDecompress(data);
-    this.logger.log(decompressed);
+    this.logger.log('Receiving', decompressed);
     return decompressed;
   }
 }
