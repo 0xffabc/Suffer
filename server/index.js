@@ -2,6 +2,7 @@ const net = require('net');
 const IpParser = require('./parsers/IpParser.js');
 const Logger = require('../logger/index.js');
 const Config = require('../config/index.js');
+const CipherAgent = require('../cipher/index.js');
 
 class Server {
   constructor(socket) {
@@ -9,6 +10,7 @@ class Server {
     this.ipParser = new IpParser();
     this.logger = new Logger('Server');
     this.config = new Config();
+    this.cipher = new CipherAgent();
 
     this.socket.once('data', this.start.bind(this));
   }
@@ -33,6 +35,7 @@ class Server {
     
     this.destSocket.pipe(this.socket);
     this.socket.pipe(this.destSocket);
+    this.cipher.init(this.socket, this.destSocket);
   }
 
   closeSocket() {
