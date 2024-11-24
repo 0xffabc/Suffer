@@ -11,7 +11,7 @@ class Cipher {
 
   // !todo
   decrypt(data) {
-
+    return data;
   }
   
   init(sender, receiver) {
