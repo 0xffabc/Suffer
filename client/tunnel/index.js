@@ -1,9 +1,12 @@
 const net = require('net');
 const Logger = require('../../logger/index.js');
+const CipherAgent = require('../../cipher/index.js');
 
 class ClientTunnel {
   constructor(host, port, destination, destPort, socket) {
     this.logger = new Logger('ClientTunnel');
+    this.cipher = new CipherAgent();
+    
     this.socket = net.createConnection({
       host,
       port
@@ -12,12 +15,13 @@ class ClientTunnel {
       const message = Buffer.concat([
         Buffer.from([destination.length]),
         Buffer.from(destination),
-        Buffer.from([destPort >> 8, destPort & 0xFF])
+        Buffer.from([destPort >> 8, destPort])
       ]);
       this.socket.write(message);
       this.onOpen();
 
       this.logger.log('authentification successful!', message);
+      this.cipher.init(this.socket, socket);
     });
 
     this.socket.on('error', _ => this.logger.log('Host returned error!!', _));
