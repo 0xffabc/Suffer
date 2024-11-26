@@ -29,8 +29,7 @@ class ClientTunnel {
   }
 
   async send(data) {
-    this.logger.log('writing message', data);
-    const dataCompressed = await this.cipher.encrypt(new Uint8Array(data));
+    const dataCompressed = await this.cipher.encrypt(data);
     this.socket.write(dataCompressed);
   }
 }
