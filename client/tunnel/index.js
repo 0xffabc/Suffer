@@ -3,7 +3,7 @@ const Logger = require('../../logger/index.js');
 const CipherAgent = require('../../cipher/index.js');
 
 class ClientTunnel {
-  constructor(host, port, destination, destPort, socket) {
+  constructor(host, port, destination, destPort, socket, isUDP = false) {
     this.logger = new Logger('ClientTunnel');
     this.cipher = new CipherAgent();
     
@@ -14,10 +14,12 @@ class ClientTunnel {
       const message = Buffer.concat([
         Buffer.from([destination.length]),
         Buffer.from(destination),
-        Buffer.from([destPort >> 8, destPort])
+        Buffer.from([destPort >> 8, destPort]),
+        isUDP ? Buffer.from([1]) : Buffer.from([])
       ]);
       
       await this.send(message);
+      
       this.opened = true;
       this.onOpen();
 
