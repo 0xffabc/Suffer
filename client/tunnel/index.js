@@ -23,7 +23,7 @@ class ClientTunnel {
       this.opened = true;
       this.onOpen();
 
-      this.logger.log('authentification successful!', message);
+      this.logger.log('authentification successful!', message, isUDP ? ' working as UDP' : ' working as TCP');
     });
 
     this.socket.on('error', _ => this.logger.log('Host returned error!!', _));
