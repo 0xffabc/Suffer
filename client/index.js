@@ -42,12 +42,14 @@ class Client {
     tunnel.onOpen = () => this.messageQueue.forEach(tunnel.send.bind(tunnel));
 
     this.logger.log('Estabishing connection to ' + host_raw.join('.') + ':' + port);
-    this.accept(host_raw, port, destAddrType);
+    
     this.socket.on('error', this.socket.end.bind(this.socket));
     this.socket.on('data', packet => {
       if (tunnel.opened) return tunnel.send(packet);
       this.messageQueue.push(packet);
     });
+
+    this.accept(host_raw, port, destAddrType);
   }
   
   accept(host, port, destType) {
