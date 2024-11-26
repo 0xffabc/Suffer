@@ -1,4 +1,6 @@
 const net = require('net');
+const dgram = require('dgram');
+
 const IpParser = require('./parsers/IpParser.js');
 const Logger = require('../logger/index.js');
 const Config = require('../config/index.js');
@@ -19,6 +21,11 @@ class Server {
     const { port, host, splitComb, isUDP } = this.ipParser.parse(await this.cipher.decrypt(data));
     this.logger.log('Connecting to', port, host, isUDP ? ', UDP connection' : ', TCP connection');
   
+    if (isUDP) this.bindUDP(host, port, splitComb);
+    else this.bindTCP(host, port, splitComb);
+  }
+
+  bindTCP(host, port, splitComb) {
     this.destSocket = net.createConnection({ host, port }, () => {
       if (splitComb.length) this.destSocket.write(splitComb);
       
@@ -40,10 +47,27 @@ class Server {
       this.destSocket.write(await this.cipher.decrypt(data)));
   }
 
-  closeSocket() {
-    this.socket.unpipe(this.destSocket);
-    this.destSocket.unpipe(this.socket);
+  bindUDP(host, port, splitComb) {
+    this.udpClient = dgram.createSocket('udp4');
+
+    this.socket.on('error', this.closeSocket.bind(this));
+    this.socket.on('end', this.closeSocket.bind(this));
+    this.socket.on('close', this.closeSocket.bind(this));
     
+    this.udpClient.on('message', async data => 
+      this.socket.write(await this.cipher.encrypt(data)));
+    this.socket.on('data', async data => {
+      const packed = await this.cipher.decrypt(data);
+      
+      this.udpClient.send(packed, 0, packed.length, port, host);
+    });
+
+    this.udpClient.on('error', () => {
+      this.socket.end();
+    });
+  }
+
+  closeSocket() {
     this.socket.end();
     this.destSocket.end();
   }
