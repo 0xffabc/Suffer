@@ -16,8 +16,8 @@ class Server {
   }
 
   async start(data) {
-    const { port, host, splitComb } = this.ipParser.parse(await this.cipher.decrypt(data));
-    this.logger.log('Connecting to', port, host);
+    const { port, host, splitComb, isUDP } = this.ipParser.parse(await this.cipher.decrypt(data));
+    this.logger.log('Connecting to', port, host, isUDP ? ', UDP connection' : ', TCP connection');
   
     this.destSocket = net.createConnection({ host, port }, () => {
       if (splitComb.length) this.destSocket.write(splitComb);
