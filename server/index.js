@@ -49,6 +49,7 @@ class Server {
 
   bindUDP(host, port, splitComb) {
     this.udpClient = dgram.createSocket('udp4');
+    this.udpClient.bind(3000);
 
     this.socket.on('error', this.closeSocket.bind(this));
     this.socket.on('end', this.closeSocket.bind(this));
