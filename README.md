@@ -7,7 +7,9 @@ Project todo:
 1. Refactor and split code by little parts - ✅
 2. Add fpe encryption and packing - 🟠
 3. Add UDP Support - ✅
- 
+
+> Solution needed! Not every socks5 client account support for UDP. We need to use TUN for Android and various pCap solutions
+
  This project is a collection of my self made utils, experiments and solutions on bypassing complex models with DPI (Deep packet inspection) combined with VPN protocols blocking and aggressive censorship. It's mainly centered around Suffer VPN protocol server, which is meant to be easily deployable (Written in Node.js!) and easily configurable (All-default values with already good strength level), while maintaining main principles in case if it all will work fine.
  This project is easy to deploy on a real server, by using Docker. Which is the fanciest way to use it.
 
